@@ -11,9 +11,9 @@ var (
 	once sync.Once
 )
 
-func SetInstance(app contracts.ApplicationInterface) {
+func SetInstance(instance contracts.ApplicationInterface) {
 	once.Do(func() {
-		app = app
+		app = instance
 	})
 }
 

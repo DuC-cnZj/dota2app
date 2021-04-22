@@ -20,6 +20,7 @@ import (
 var _ contracts.ApplicationInterface = (*Application)(nil)
 
 var DefaultBootstrappers = []contracts.Bootstrapper{
+	&bootstrappers.I18nBootstrapper{},
 	&bootstrappers.DBBootstrapper{},
 	&bootstrappers.WebBootstrapper{},
 	&bootstrappers.RouterBootstrapper{},
