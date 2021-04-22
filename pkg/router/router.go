@@ -34,4 +34,9 @@ func Init(e *gin.Engine) {
 		api.POST("/login", authMiddleware.LoginHandler)
 		api.GET("/refresh_token", authMiddleware.RefreshHandler)
 	}
+
+	auth := api.Group("/", authMiddleware.MiddlewareFunc())
+	{
+		auth.POST("/userinfo", authC.Info)
+	}
 }

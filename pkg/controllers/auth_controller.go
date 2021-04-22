@@ -50,19 +50,37 @@ func (au *AuthController) Info(ctx *gin.Context) {
 		"email":  user.Email,
 		"name":   user.Name,
 		"avatar": user.Avatar,
+		"intro":  user.Intro,
 	})
 }
 
 func (au *AuthController) AuthMiddleware() (*jwt.GinJWTMiddleware, error) {
 	return jwt.New(&jwt.GinJWTMiddleware{
-		Realm:      "sso",
+		Realm:      "dota2app",
 		Key:        []byte(utils.Config().AppSecret),
 		Timeout:    time.Hour,
 		MaxRefresh: time.Hour,
+		IdentityHandler: func(ctx *gin.Context) interface{} {
+			claims := jwt.ExtractClaims(ctx)
+
+			return &models.User{
+				ID:        int(claims["id"].(float64)),
+				Name:      claims["name"].(string),
+				Email:     claims["email"].(string),
+				Mobile:    claims["mobile"].(string),
+				Avatar:    claims["avatar"].(string),
+				Intro:     claims["intro"].(string),
+			}
+		},
 		PayloadFunc: func(data interface{}) jwt.MapClaims {
 			if v, ok := data.(*models.User); ok {
 				return jwt.MapClaims{
-					jwt.IdentityKey: v,
+					"id": v.ID,
+					"name": v.Name,
+					"email": v.Email,
+					"mobile": v.Mobile,
+					"avatar": v.Avatar,
+					"intro": v.Intro,
 				}
 			}
 
