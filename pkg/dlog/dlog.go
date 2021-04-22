@@ -7,7 +7,7 @@ import (
 
 var logger contracts.LoggerInterface = logrus.New()
 
-func SetLogger(l contracts.LoggerInterface)  {
+func SetLogger(l contracts.LoggerInterface) {
 	logger = l
 }
 

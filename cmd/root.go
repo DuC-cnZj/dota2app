@@ -1,8 +1,9 @@
 package cmd
 
 import (
-	"github.com/spf13/viper"
 	"os"
+
+	"github.com/spf13/viper"
 
 	"github.com/spf13/cobra"
 )
@@ -29,4 +30,3 @@ func init() {
 	viper.BindPFlag("debug", rootCmd.PersistentFlags().Lookup("debug"))
 	viper.BindPFlag("app_port", rootCmd.PersistentFlags().Lookup("app_port"))
 }
-

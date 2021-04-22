@@ -3,16 +3,18 @@ package app
 import (
 	"context"
 	"fmt"
-	"github.com/DuC-cnZj/dota2app/pkg/app/bootstrappers"
-	"github.com/DuC-cnZj/dota2app/pkg/config"
-	"github.com/DuC-cnZj/dota2app/pkg/contracts"
-	"github.com/DuC-cnZj/dota2app/pkg/database"
-	"github.com/DuC-cnZj/dota2app/pkg/dlog"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
+
+	"github.com/DuC-cnZj/dota2app/pkg/app/bootstrappers"
+	"github.com/DuC-cnZj/dota2app/pkg/app/instance"
+	"github.com/DuC-cnZj/dota2app/pkg/config"
+	"github.com/DuC-cnZj/dota2app/pkg/contracts"
+	"github.com/DuC-cnZj/dota2app/pkg/database"
+	"github.com/DuC-cnZj/dota2app/pkg/dlog"
 )
 
 var _ contracts.ApplicationInterface = (*Application)(nil)
@@ -51,7 +53,7 @@ func (app *Application) SetHttpHandler(handler http.Handler) {
 	}
 }
 
-func (app *Application) Event() contracts.DispatcherInterface {
+func (app *Application) EventDispatcher() contracts.DispatcherInterface {
 	return app.dispatcher
 }
 
@@ -66,8 +68,8 @@ func NewApplication(config *config.Config, opts ...contracts.Option) *Applicatio
 	}
 
 	app := &Application{
-		bootstrappers:           DefaultBootstrappers,
-		config:                  config,
+		bootstrappers: DefaultBootstrappers,
+		config:        config,
 	}
 
 	app.dbManager = database.NewManager(app)
@@ -75,6 +77,8 @@ func NewApplication(config *config.Config, opts ...contracts.Option) *Applicatio
 	for _, opt := range opts {
 		opt(app)
 	}
+
+	instance.SetInstance(app)
 
 	for _, bootstrapper := range mustBooted {
 		if err := bootstrapper.Bootstrap(app); err != nil {

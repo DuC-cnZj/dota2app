@@ -2,17 +2,19 @@ package bootstrappers
 
 import (
 	"fmt"
+	"time"
+
 	"github.com/DuC-cnZj/dota2app/pkg/adapter"
 	"github.com/DuC-cnZj/dota2app/pkg/contracts"
 	"github.com/DuC-cnZj/dota2app/pkg/dlog"
+	"github.com/DuC-cnZj/dota2app/pkg/models"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
-	"time"
 )
 
 var Models = []interface{}{
-
+	&models.User{},
 }
 
 type DBBootstrapper struct{}
@@ -56,12 +58,9 @@ func (D *DBBootstrapper) Bootstrap(app contracts.ApplicationInterface) error {
 	})
 	app.DBManager().SetDB(db)
 
-	if app.IsDebug() {
-		if err := app.DBManager().AutoMigrate(Models...); err != nil {
-			return err
-		}
+	if err := app.DBManager().AutoMigrate(Models...); err != nil {
+		return err
 	}
 
 	return nil
 }
-

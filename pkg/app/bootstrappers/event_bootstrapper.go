@@ -6,17 +6,16 @@ import (
 	"github.com/DuC-cnZj/dota2app/pkg/event"
 )
 
-type EventBootstrapper struct {}
+type EventBootstrapper struct{}
 
-var events map[contracts.Event][]contracts.Listener = map[contracts.Event][]contracts.Listener{
-}
+var events map[contracts.Event][]contracts.Listener = map[contracts.Event][]contracts.Listener{}
 
 func (e *EventBootstrapper) Bootstrap(app contracts.ApplicationInterface) error {
 	app.SetEventDispatcher(event.NewDispatcher(app))
 
 	for e, listeners := range events {
 		for _, listener := range listeners {
-			app.Event().Listen(e, listener)
+			app.EventDispatcher().Listen(e, listener)
 		}
 	}
 

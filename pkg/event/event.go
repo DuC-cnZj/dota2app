@@ -1,8 +1,9 @@
 package event
 
 import (
-	"github.com/DuC-cnZj/dota2app/pkg/contracts"
 	"sync"
+
+	"github.com/DuC-cnZj/dota2app/pkg/contracts"
 )
 
 type Dispatcher struct {

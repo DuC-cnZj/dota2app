@@ -1,9 +1,10 @@
 package contracts
 
 import (
-	"github.com/DuC-cnZj/dota2app/pkg/config"
 	"net/http"
 	"os"
+
+	"github.com/DuC-cnZj/dota2app/pkg/config"
 )
 
 type ShutdownFunc func(ApplicationInterface)
@@ -28,7 +29,7 @@ type ApplicationInterface interface {
 	RegisterBeforeShutdownFunc(ShutdownFunc)
 	RegisterAfterShutdownFunc(ShutdownFunc)
 
-	Event() DispatcherInterface
+	EventDispatcher() DispatcherInterface
 	SetEventDispatcher(DispatcherInterface)
 
 	HttpHandler() http.Handler

@@ -13,4 +13,3 @@ func (r *RouterBootstrapper) Bootstrap(app contracts.ApplicationInterface) error
 
 	return nil
 }
-

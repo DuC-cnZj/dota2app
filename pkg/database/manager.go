@@ -7,7 +7,7 @@ import (
 
 type Manager struct {
 	app contracts.ApplicationInterface
-	db *gorm.DB
+	db  *gorm.DB
 }
 
 func NewManager(app contracts.ApplicationInterface) *Manager {

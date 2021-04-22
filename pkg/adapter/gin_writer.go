@@ -1,8 +1,9 @@
 package adapter
 
 import (
-	"github.com/DuC-cnZj/dota2app/pkg/dlog"
 	"strings"
+
+	"github.com/DuC-cnZj/dota2app/pkg/dlog"
 )
 
 type GinWriter struct{}
@@ -16,4 +17,3 @@ func (e *GinWriter) Write(p []byte) (n int, err error) {
 
 	return len(p), nil
 }
-

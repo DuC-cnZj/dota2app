@@ -2,6 +2,7 @@ package bootstrappers
 
 import (
 	"errors"
+
 	"github.com/DuC-cnZj/dota2app/pkg/contracts"
 	"github.com/DuC-cnZj/dota2app/pkg/dlog"
 	log "github.com/sirupsen/logrus"

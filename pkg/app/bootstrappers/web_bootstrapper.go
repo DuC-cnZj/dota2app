@@ -2,10 +2,11 @@ package bootstrappers
 
 import (
 	"fmt"
+	"time"
+
 	"github.com/DuC-cnZj/dota2app/pkg/adapter"
 	"github.com/DuC-cnZj/dota2app/pkg/contracts"
 	"github.com/DuC-cnZj/dota2app/pkg/dlog"
-	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -18,7 +19,7 @@ var (
 	ginWriter = &adapter.GinWriter{}
 )
 
-type WebBootstrapper struct {}
+type WebBootstrapper struct{}
 
 func (a *WebBootstrapper) Bootstrap(app contracts.ApplicationInterface) error {
 	var middlewares []gin.HandlerFunc

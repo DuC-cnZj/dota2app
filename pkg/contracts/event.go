@@ -37,4 +37,3 @@ type DispatcherInterface interface {
 
 	GetListeners(Event) []Listener
 }
-
