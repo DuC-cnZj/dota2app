@@ -1,0 +1,21 @@
+app_port: 5000
+app_secret: qwertyuiop
+debug: false
+
+# logrus or klog
+log_channel: "logrus"
+
+profile_enabled: true
+
+# database
+db_host: 127.0.0.1
+db_port: 3306
+db_database: dota2app
+db_username: root
+db_password: ""
+
+# redis
+redis_db: ""
+redis_host: ""
+redis_password: ""
+redis_port: ""
