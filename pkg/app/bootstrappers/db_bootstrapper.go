@@ -15,6 +15,7 @@ import (
 
 var Models = []interface{}{
 	&models.User{},
+	&models.Notification{},
 }
 
 type DBBootstrapper struct{}

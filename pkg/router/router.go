@@ -3,12 +3,19 @@ package router
 import (
 	"net/http"
 
+	"github.com/gin-contrib/cors"
+
 	"github.com/DuC-cnZj/dota2app/pkg/controllers"
 	t "github.com/DuC-cnZj/dota2app/pkg/translator"
 	"github.com/gin-gonic/gin"
 )
 
 func Init(e *gin.Engine) {
+	var cd = cors.DefaultConfig()
+	cd.AllowAllOrigins = true
+	cd.AddAllowHeaders("X-Requested-With", "Authorization", "Accept-Language")
+	e.Use(cors.New(cd))
+
 	authC := controllers.NewAuthController()
 	authMiddleware, _ := authC.AuthMiddleware()
 
