@@ -56,7 +56,6 @@ func (au *AuthController) Info(ctx *gin.Context) {
 
 func (au *AuthController) AuthMiddleware() (*jwt.GinJWTMiddleware, error) {
 	return jwt.New(&jwt.GinJWTMiddleware{
-		Realm:      "dota2app",
 		Key:        []byte(utils.Config().AppSecret),
 		Timeout:    time.Hour,
 		MaxRefresh: time.Hour,
@@ -64,23 +63,23 @@ func (au *AuthController) AuthMiddleware() (*jwt.GinJWTMiddleware, error) {
 			claims := jwt.ExtractClaims(ctx)
 
 			return &models.User{
-				ID:        int(claims["id"].(float64)),
-				Name:      claims["name"].(string),
-				Email:     claims["email"].(string),
-				Mobile:    claims["mobile"].(string),
-				Avatar:    claims["avatar"].(string),
-				Intro:     claims["intro"].(string),
+				ID:     int(claims["id"].(float64)),
+				Name:   claims["name"].(string),
+				Email:  claims["email"].(string),
+				Mobile: claims["mobile"].(string),
+				Avatar: claims["avatar"].(string),
+				Intro:  claims["intro"].(string),
 			}
 		},
 		PayloadFunc: func(data interface{}) jwt.MapClaims {
 			if v, ok := data.(*models.User); ok {
 				return jwt.MapClaims{
-					"id": v.ID,
-					"name": v.Name,
-					"email": v.Email,
+					"id":     v.ID,
+					"name":   v.Name,
+					"email":  v.Email,
 					"mobile": v.Mobile,
 					"avatar": v.Avatar,
-					"intro": v.Intro,
+					"intro":  v.Intro,
 				}
 			}
 
@@ -100,6 +99,7 @@ func (au *AuthController) AuthMiddleware() (*jwt.GinJWTMiddleware, error) {
 			return au.authenticate(ctx, &input)
 		},
 		Authorizator: func(data interface{}, c *gin.Context) bool {
+			// TODO 权限认证
 			return true
 		},
 		Unauthorized: func(ctx *gin.Context, code int, message string) {
