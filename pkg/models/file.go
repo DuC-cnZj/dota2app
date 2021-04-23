@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/DuC-cnZj/dota2app/pkg/contracts"
@@ -67,7 +68,12 @@ func (f *File) GetDriverName() string {
 func (f *File) GetFullPath() string {
 	switch f.Driver {
 	case contracts.DriverMinio:
-		return fmt.Sprintf("%s/%s", utils.Storage().(contracts.WithMinio).MinioClient().EndpointURL(), f.RelativePath)
+		endpointUrl := utils.Storage().(contracts.WithMinio).MinioClient().EndpointURL().String()
+
+		return fmt.Sprintf(
+			"%s/%s",
+			strings.TrimRight(endpointUrl, "/"),
+			strings.TrimLeft(f.RelativePath, "/"))
 	default:
 		return f.RelativePath
 	}

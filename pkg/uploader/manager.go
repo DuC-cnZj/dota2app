@@ -42,7 +42,7 @@ func (m *Manager) Upload(file *multipart.FileHeader, name string, uploadType con
 	marshal, _ := json.Marshal(&object)
 	f := &models.File{
 		Driver:       contracts.DriverMinio,
-		RelativePath: fmt.Sprintf("%s/%s", object.Bucket, object.Key),
+		RelativePath: fmt.Sprintf("/%s/%s", object.Bucket, object.Key),
 		Type:         uploadType,
 		UserID:       userID,
 		Info:         string(marshal),
