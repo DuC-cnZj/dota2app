@@ -2,9 +2,12 @@ package uploader
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"mime/multipart"
 
+	"github.com/DuC-cnZj/dota2app/pkg/contracts"
+	"github.com/DuC-cnZj/dota2app/pkg/models"
 	"github.com/DuC-cnZj/dota2app/pkg/utils"
 	"github.com/minio/minio-go/v7"
 )
@@ -25,16 +28,27 @@ func (m *Manager) SetMinioClient(c *minio.Client) {
 	m.minioClient = c
 }
 
-func (m *Manager) Upload(file *multipart.FileHeader, name string) (url string, err error) {
+func (m *Manager) Upload(file *multipart.FileHeader, name string, uploadType contracts.UploadType, userID int) (contracts.File, error) {
 	open, err := file.Open()
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 	defer open.Close()
 	object, err := m.MinioClient().PutObject(context.Background(), utils.Config().MinioBucket, name, open, file.Size, minio.PutObjectOptions{ContentType: file.Header.Get("Content-Type")})
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
-	return fmt.Sprintf("%s/%s/%s", m.minioClient.EndpointURL().String(), object.Bucket, object.Key), nil
+	marshal, _ := json.Marshal(&object)
+	f := &models.File{
+		Driver:       contracts.DriverMinio,
+		RelativePath: fmt.Sprintf("%s/%s", object.Bucket, object.Key),
+		Type:         uploadType,
+		UserID:       userID,
+		Info:         string(marshal),
+		Size:         file.Size,
+	}
+	utils.DB().Create(f)
+
+	return f, nil
 }

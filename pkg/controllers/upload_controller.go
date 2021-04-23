@@ -5,13 +5,14 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/DuC-cnZj/dota2app/pkg/contracts"
+
 	"github.com/DuC-cnZj/dota2app/pkg/auth"
 	"github.com/DuC-cnZj/dota2app/pkg/derrors"
 	"github.com/DuC-cnZj/dota2app/pkg/dlog"
 	"github.com/DuC-cnZj/dota2app/pkg/response"
 	t "github.com/DuC-cnZj/dota2app/pkg/translator"
 	"github.com/DuC-cnZj/dota2app/pkg/utils"
-	"github.com/dustin/go-humanize"
 	"github.com/gin-gonic/gin"
 )
 
@@ -33,24 +34,30 @@ func (*UploadController) Upload(ctx *gin.Context) {
 		return
 	}
 
-	path, err := utils.Storage().Upload(file, generateFileName(ctx, file.Filename))
+	f, err := utils.Storage().Upload(file, generateFileName(ctx, file.Filename), contracts.TypeAvatar, auth.User(ctx).ID)
 	if err != nil {
 		dlog.Error(err)
 		response.Error(ctx, 500, err)
 		return
 	}
 
-	response.Success(ctx, 201, gin.H{"path": path, "size": humanize.Bytes(uint64(file.Size))})
+	response.Success(ctx, 201, gin.H{
+		"path":          f.GetFullPath(),
+		"size":          f.GetSize(),
+		"humanize_size": f.ToHumanizeSize(),
+		"relative_path": f.GetRelativePath(),
+	})
 }
 
 func generateFileName(ctx *gin.Context, oldName string) string {
 	user := auth.User(ctx)
 
-	return fmt.Sprintf("%s-%s%s", time.Now().Format("20060102"), user.Name, filepath.Ext(oldName))
+	return fmt.Sprintf("%s-%s-%s%s", time.Now().Format("20060102"), user.Name, utils.RandomString(10), filepath.Ext(oldName))
 }
 
 func validateContentType(contentType string) bool {
 	var validated bool
+
 	for _, ct := range []string{"image/gif", "image/jpeg", "image/png"} {
 		if contentType == ct {
 			validated = true

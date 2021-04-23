@@ -21,7 +21,7 @@ redis_password: ""
 redis_port: ""
 
 # minio: policy 必须是 *.* readonly
-minio_endpoint: "127.0.0.1:32345"
-minio_access_key: "SvEIFHCr48IC3QH3IgLu"
-minio_access_secret: "s2Yi2QtQKCDs4u3N9hV2t5T0TZBoXqWDEZ2DGzab"
+minio_endpoint: "127.0.0.1:9009"
+minio_access_key: "minioadmin"
+minio_access_secret: "minioadmin"
 minio_bucket: dota2app
