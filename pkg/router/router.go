@@ -10,6 +10,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+const (
+	JSONContentType = "application/json"
+)
+
 func Init(e *gin.Engine) {
 	var cd = cors.DefaultConfig()
 	cd.AllowAllOrigins = true
@@ -20,13 +24,11 @@ func Init(e *gin.Engine) {
 	authMiddleware, _ := authC.AuthMiddleware()
 
 	e.NoRoute(func(ctx *gin.Context) {
-		ctx.Data(http.StatusNotFound, "application/json", []byte(`{"code": 404, "message": "404 not found"}`))
+		ctx.Data(http.StatusNotFound, JSONContentType, []byte(`{"code": 404, "message": "404 not found"}`))
 	})
 
 	e.GET("/", func(ctx *gin.Context) {
-		ctx.JSON(200, gin.H{
-			"success": true,
-		})
+		ctx.Data(200, JSONContentType, []byte(`{"success": "true"}`))
 	})
 
 	api := e.Group("/api", t.I18nMiddleware())
