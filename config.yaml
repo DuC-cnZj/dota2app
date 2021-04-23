@@ -19,3 +19,9 @@ redis_db: ""
 redis_host: ""
 redis_password: ""
 redis_port: ""
+
+# minio
+minio_endpoint: "127.0.0.1:32345"
+minio_access_key: "SvEIFHCr48IC3QH3IgLu"
+minio_access_secret: "s2Yi2QtQKCDs4u3N9hV2t5T0TZBoXqWDEZ2DGzab"
+minio_bucket: dota2app

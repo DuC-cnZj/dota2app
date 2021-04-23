@@ -35,8 +35,10 @@ func Init(e *gin.Engine) {
 		api.GET("/refresh_token", authMiddleware.RefreshHandler)
 	}
 
+	up := controllers.NewUploadController()
 	auth := api.Group("/", authMiddleware.MiddlewareFunc())
 	{
 		auth.POST("/userinfo", authC.Info)
+		auth.POST("/upload", up.Upload)
 	}
 }

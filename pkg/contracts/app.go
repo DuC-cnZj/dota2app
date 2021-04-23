@@ -23,6 +23,9 @@ type ApplicationInterface interface {
 
 	DBManager() DBManager
 
+	FileManager() StorageInterface
+	SetFileManager(StorageInterface)
+
 	Run() chan os.Signal
 	Shutdown()
 

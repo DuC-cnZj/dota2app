@@ -22,16 +22,18 @@ var _ contracts.ApplicationInterface = (*Application)(nil)
 var DefaultBootstrappers = []contracts.Bootstrapper{
 	&bootstrappers.I18nBootstrapper{},
 	&bootstrappers.DBBootstrapper{},
+	&bootstrappers.StorageBootstrapper{},
 	&bootstrappers.WebBootstrapper{},
 	&bootstrappers.RouterBootstrapper{},
 }
 
 type Application struct {
-	bootstrappers []contracts.Bootstrapper
-
 	config *config.Config
 
-	dbManager contracts.DBManager
+	bootstrappers []contracts.Bootstrapper
+
+	storageManager contracts.StorageInterface
+	dbManager      contracts.DBManager
 
 	httpHandler http.Handler
 	httpServer  *http.Server
@@ -40,6 +42,14 @@ type Application struct {
 	afterShutdownFunctions  []contracts.ShutdownFunc
 
 	dispatcher contracts.DispatcherInterface
+}
+
+func (app *Application) FileManager() contracts.StorageInterface {
+	return app.storageManager
+}
+
+func (app *Application) SetFileManager(m contracts.StorageInterface) {
+	app.storageManager = m
 }
 
 func (app *Application) HttpHandler() http.Handler {

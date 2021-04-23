@@ -19,6 +19,10 @@ func DB() *gorm.DB {
 	return App().DBManager().DB()
 }
 
+func Storage() contracts.StorageInterface {
+	return App().FileManager()
+}
+
 func Event() contracts.DispatcherInterface {
 	return App().EventDispatcher()
 }
