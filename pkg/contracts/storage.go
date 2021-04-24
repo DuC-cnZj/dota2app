@@ -10,25 +10,13 @@ type UploadType = string
 
 type UploadDriver = uint8
 
-const (
-	TypeAvatar UploadType = "avatar"
-)
-
-const (
-	// minio
-	DriverMinio UploadDriver = iota + 1
-)
-
-var DriverNameMap map[UploadDriver]string = map[UploadDriver]string{
-	DriverMinio: "minio",
-}
-
 type WithMinio interface {
 	MinioClient() *minio.Client
 	SetMinioClient(c *minio.Client)
 }
 
 type File interface {
+	GetID() int
 	GetUploadType() UploadType
 	GetUserID() int
 	GetFullPath() string
@@ -42,5 +30,5 @@ type File interface {
 }
 
 type StorageInterface interface {
-	Upload(file *multipart.FileHeader, name string, uploadType UploadType, userID int) (f File, err error)
+	Upload(file *multipart.FileHeader, name string, userID int) (f File, err error)
 }

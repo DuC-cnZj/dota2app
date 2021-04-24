@@ -5,8 +5,6 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/DuC-cnZj/dota2app/pkg/contracts"
-
 	"github.com/DuC-cnZj/dota2app/pkg/auth"
 	"github.com/DuC-cnZj/dota2app/pkg/derrors"
 	"github.com/DuC-cnZj/dota2app/pkg/dlog"
@@ -34,7 +32,7 @@ func (*UploadController) Upload(ctx *gin.Context) {
 		return
 	}
 
-	f, err := utils.Storage().Upload(file, generateFileName(ctx, file.Filename), contracts.TypeAvatar, auth.User(ctx).ID)
+	f, err := utils.Storage().Upload(file, generateFileName(ctx, file.Filename), auth.User(ctx).ID)
 	if err != nil {
 		dlog.Error(err)
 		response.Error(ctx, 500, err)
@@ -42,6 +40,7 @@ func (*UploadController) Upload(ctx *gin.Context) {
 	}
 
 	response.Success(ctx, 201, gin.H{
+		"id":            f.GetID(),
 		"path":          f.GetFullPath(),
 		"size":          f.GetSize(),
 		"humanize_size": f.ToHumanizeSize(),

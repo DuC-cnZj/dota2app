@@ -17,15 +17,21 @@ var testCmd = &cobra.Command{
 		if err := app.Bootstrap(); err != nil {
 			dlog.Fatal(err)
 		}
-		hash, _ := utils.PasswordHash("12345")
-		utils.DB().Create(&models.User{
-			Name:     "duc",
-			Email:    "1025434218@qq.com",
-			Password: hash,
-			Mobile:   "18888780080",
-			Avatar:   "",
-			Intro:    "hello everyone.",
-		})
+		var u models.User
+
+		utils.DB().First(&u)
+		//hash, _ := utils.PasswordHash("12345")
+		//u := &models.User{
+		//	Name:     "duc",
+		//	Email:    "1025434218@qq.com",
+		//	Password: hash,
+		//	Mobile:   "18888780080",
+		//	Intro:    "hello everyone.",
+		//}
+		//utils.DB().Create(u)
+		for _, file := range u.HistoryAvatars() {
+			dlog.Info(file.GetFullPath(), file.FileableID)
+		}
 		app.Shutdown()
 	},
 }

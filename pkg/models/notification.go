@@ -9,8 +9,8 @@ import (
 type Notification struct {
 	ID int `json:"id" gorm:"primaryKey;"`
 
-	UserID int        `json:"user_id"`
-	Data   string     `json:"data" gorm:"type:text;"`
+	UserID int        `json:"user_id" gorm:"not null;"`
+	Data   string     `json:"data" gorm:"type:text;not null;"`
 	ReadAt *time.Time `json:"read_at"`
 
 	CreatedAt time.Time      `json:"created_at"`

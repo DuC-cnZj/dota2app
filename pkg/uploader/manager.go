@@ -28,7 +28,7 @@ func (m *Manager) SetMinioClient(c *minio.Client) {
 	m.minioClient = c
 }
 
-func (m *Manager) Upload(file *multipart.FileHeader, name string, uploadType contracts.UploadType, userID int) (contracts.File, error) {
+func (m *Manager) Upload(file *multipart.FileHeader, name string, userID int) (contracts.File, error) {
 	open, err := file.Open()
 	if err != nil {
 		return nil, err
@@ -41,12 +41,11 @@ func (m *Manager) Upload(file *multipart.FileHeader, name string, uploadType con
 
 	marshal, _ := json.Marshal(&object)
 	f := &models.File{
-		Driver:       contracts.DriverMinio,
-		RelativePath: fmt.Sprintf("/%s/%s", object.Bucket, object.Key),
-		Type:         uploadType,
-		UserID:       userID,
-		Info:         string(marshal),
-		Size:         file.Size,
+		Driver: models.DriverMinio,
+		Path:   fmt.Sprintf("%s/%s/%s", m.MinioClient().EndpointURL().String(), object.Bucket, object.Key),
+		UserID: userID,
+		Info:   string(marshal),
+		Size:   file.Size,
 	}
 	utils.DB().Create(f)
 

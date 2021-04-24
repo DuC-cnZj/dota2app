@@ -41,6 +41,7 @@ func Init(e *gin.Engine) {
 	auth := api.Group("/", authMiddleware.MiddlewareFunc())
 	{
 		auth.POST("/userinfo", authC.Info)
+		auth.POST("/update_userinfo", authC.UpdateInfo)
 		auth.POST("/upload", up.Upload)
 	}
 }

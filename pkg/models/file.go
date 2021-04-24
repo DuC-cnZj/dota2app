@@ -3,35 +3,46 @@ package models
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
-	"strings"
+	"net/url"
 	"time"
 
 	"github.com/DuC-cnZj/dota2app/pkg/contracts"
-	"github.com/DuC-cnZj/dota2app/pkg/utils"
 	"github.com/dustin/go-humanize"
 	"github.com/minio/minio-go/v7"
 	"gorm.io/gorm"
 )
 
-//RelativePath
+const (
+	TypeAvatar          contracts.UploadType = "avatar"
+	TypeBackgroundImage contracts.UploadType = "background_image"
+)
+
+const (
+	// minio
+	DriverMinio contracts.UploadDriver = iota + 1
+)
+
+var DriverNameMap map[contracts.UploadDriver]string = map[contracts.UploadDriver]string{
+	DriverMinio: "minio",
+}
+
 type File struct {
 	ID int `json:"id" gorm:"primaryKey;"`
 
 	// 上传的 oss 驱动
-	Driver uint8 `json:"driver" gorm:"type:tinyint;comment:1=minio;"`
+	Driver uint8 `json:"driver" gorm:"type:tinyint;not null;comment:1=minio;"`
 
 	// 全路径
-	RelativePath string `json:"relative_path" gorm:"type:VARCHAR(255);"`
+	Path string `json:"path" gorm:"type:VARCHAR(255);not null;"`
 
 	// 文件大小
-	Size int64 `json:"size"`
-
-	// 类型: avatar,  file...
-	Type string `json:"type" gorm:"type:VARCHAR(20);"`
+	Size int64 `json:"size" gorm:"not null;default:0;"`
 
 	// 上传用户
-	UserID int `json:"user_id"`
+	UserID int `json:"user_id" gorm:"not null;"`
+
+	FileableID   int
+	FileableType string `gorm:"not null;"`
 
 	// oss 返回的 obj 的整个 json
 	Info string `json:"result" gorm:"type:text;"`
@@ -46,7 +57,7 @@ func (f *File) GetSize() uint64 {
 }
 
 func (f *File) GetUploadType() contracts.UploadType {
-	return f.Type
+	return f.FileableType
 }
 
 func (f *File) GetUserID() int {
@@ -54,7 +65,12 @@ func (f *File) GetUserID() int {
 }
 
 func (f *File) GetRelativePath() string {
-	return f.RelativePath
+	parse, err := url.Parse(f.Path)
+	if err != nil {
+		return f.Path
+	}
+
+	return parse.Path
 }
 
 func (f *File) GetDriver() uint8 {
@@ -62,25 +78,19 @@ func (f *File) GetDriver() uint8 {
 }
 
 func (f *File) GetDriverName() string {
-	return contracts.DriverNameMap[f.Driver]
+	return DriverNameMap[f.Driver]
 }
 
 func (f *File) GetFullPath() string {
-	switch f.Driver {
-	case contracts.DriverMinio:
-		endpointUrl := utils.Storage().(contracts.WithMinio).MinioClient().EndpointURL().String()
+	return f.Path
+}
 
-		return fmt.Sprintf(
-			"%s/%s",
-			strings.TrimRight(endpointUrl, "/"),
-			strings.TrimLeft(f.RelativePath, "/"))
-	default:
-		return f.RelativePath
-	}
+func (f *File) GetID() int {
+	return f.ID
 }
 
 func (f *File) ToMinioObject() (*minio.ObjectInfo, error) {
-	if f.Driver != contracts.DriverMinio {
+	if f.Driver != DriverMinio {
 		return nil, errors.New("file driver is not minio")
 	}
 	var info minio.ObjectInfo
