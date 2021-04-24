@@ -26,7 +26,7 @@ type File interface {
 	GetDriverName() string
 
 	ToHumanizeSize() string
-	ToMinioObject() (*minio.ObjectInfo, error)
+	ToMinioUploadInfo() (*minio.UploadInfo, error)
 }
 
 type StorageInterface interface {

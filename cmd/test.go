@@ -1,12 +1,17 @@
 package cmd
 
 import (
+	"context"
+	"fmt"
 	"github.com/DuC-cnZj/dota2app/pkg/app"
 	"github.com/DuC-cnZj/dota2app/pkg/config"
+	"github.com/DuC-cnZj/dota2app/pkg/contracts"
 	"github.com/DuC-cnZj/dota2app/pkg/dlog"
 	"github.com/DuC-cnZj/dota2app/pkg/models"
 	"github.com/DuC-cnZj/dota2app/pkg/utils"
+	"github.com/minio/minio-go/v7"
 	"github.com/spf13/cobra"
+	"sync"
 )
 
 var testCmd = &cobra.Command{
@@ -29,9 +34,35 @@ var testCmd = &cobra.Command{
 		//	Intro:    "hello everyone.",
 		//}
 		//utils.DB().Create(u)
-		for _, file := range u.HistoryAvatars() {
-			dlog.Info(file.GetFullPath(), file.FileableID)
+		var files []*models.File
+		utils.DB().Unscoped().Find(&files)
+		wg:=sync.WaitGroup{}
+		wg.Add(len(files))
+		for _, file := range files {
+			go func(file *models.File) {
+				defer wg.Done()
+				obj, err := file.ToMinioUploadInfo()
+				if err != nil {
+					dlog.Error(err)
+					return
+				}
+				fmt.Println(err,obj)
+				dlog.Info(obj)
+				if err := app.FileManager().(contracts.WithMinio).MinioClient().RemoveObject(context.Background(), app.Config().MinioBucket, obj.Key, minio.RemoveObjectOptions{}); err != nil {
+					dlog.Error(err)
+				}
+			}(file)
 		}
+		wg.Wait()
+		//for _, file := range u.HistoryAvatars() {
+		//	utils.DB().Delete(&file)
+		//	//dlog.Info(file.GetFullPath(), file.FileableID)
+		//}
+		//for _, file := range u.HistoryBackgrounds() {
+			//utils.DB().Delete(&file)
+			// obj, _ := file.ToMinioUploadInfo()
+			//dlog.Info(file.GetFullPath(), file.FileableID)
+		//}
 		app.Shutdown()
 	},
 }

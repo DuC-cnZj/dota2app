@@ -89,11 +89,11 @@ func (f *File) GetID() int {
 	return f.ID
 }
 
-func (f *File) ToMinioObject() (*minio.ObjectInfo, error) {
+func (f *File) ToMinioUploadInfo() (*minio.UploadInfo, error) {
 	if f.Driver != DriverMinio {
 		return nil, errors.New("file driver is not minio")
 	}
-	var info minio.ObjectInfo
+	var info minio.UploadInfo
 	if err := json.Unmarshal([]byte(f.Info), &info); err != nil {
 		return nil, err
 	}
