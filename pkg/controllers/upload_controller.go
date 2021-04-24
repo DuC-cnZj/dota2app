@@ -51,7 +51,7 @@ func (*UploadController) Upload(ctx *gin.Context) {
 func generateFileName(ctx *gin.Context, oldName string) string {
 	user := auth.User(ctx)
 
-	return fmt.Sprintf("%s-%s-%s%s", time.Now().Format("20060102"), user.Name, utils.RandomString(10), filepath.Ext(oldName))
+	return fmt.Sprintf("%s/user-%d-%s%s", time.Now().Format("20060102"), user.ID, utils.RandomString(10), filepath.Ext(oldName))
 }
 
 func validateContentType(contentType string) bool {
