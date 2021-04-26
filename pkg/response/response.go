@@ -3,18 +3,24 @@ package response
 import "github.com/gin-gonic/gin"
 
 type JsonResponse struct {
-	Code     int         `json:"code,omitempty"`
-	Data     interface{} `json:"data,omitempty"`
-	Message  string      `json:"message,omitempty"`
-	Page     int         `json:"page,omitempty"`
-	PageSize int         `json:"page_size,omitempty"`
-	Total    int64       `json:"total,omitempty"`
+	Code    int         `json:"code,omitempty"`
+	Data    interface{} `json:"data,omitempty"`
+	Message string      `json:"message,omitempty"`
+}
+
+type PaginateResponse struct {
+	JsonResponse
+	Page     int   `json:"page"`
+	PageSize int   `json:"page_size"`
+	Total    int64 `json:"total"`
 }
 
 func Pagination(ctx *gin.Context, code int, data interface{}, page, pageSize int, total int64) {
-	ctx.JSON(code, &JsonResponse{
-		Code:     code,
-		Data:     data,
+	ctx.JSON(code, &PaginateResponse{
+		JsonResponse: JsonResponse{
+			Code: code,
+			Data: data,
+		},
 		Page:     page,
 		PageSize: pageSize,
 		Total:    total,

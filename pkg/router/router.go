@@ -43,5 +43,8 @@ func Init(e *gin.Engine) {
 		auth.POST("/userinfo", authC.Info)
 		auth.POST("/update_userinfo", authC.UpdateInfo)
 		auth.POST("/upload", up.Upload)
+
+		auth.GET("/history_avatars", authC.GetHistoryAvatars)
+		auth.GET("/history_background_images", authC.GetHistoryBackgroundImages)
 	}
 }

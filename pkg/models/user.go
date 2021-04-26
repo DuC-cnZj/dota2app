@@ -3,6 +3,8 @@ package models
 import (
 	"time"
 
+	"github.com/DuC-cnZj/dota2app/pkg/scopes"
+
 	"github.com/DuC-cnZj/dota2app/pkg/utils"
 
 	"gorm.io/gorm"
@@ -32,9 +34,35 @@ func (user *User) HistoryAvatars() []*File {
 	return avatars
 }
 
-func (user *User) HistoryBackgrounds() []*File {
-	var avatars = make([]*File, 0)
-	utils.DB().Where("`user_id` = ? AND `fileable_type` = ? AND `fileable_id` IS NULL", user.ID, TypeBackgroundImage).Find(&avatars)
+func (user *User) HistoryAvatarsWithPaginate(page *int, size *int) ([]*File, int64) {
+	var (
+		total   int64
+		avatars = make([]*File, 0)
+		db      = utils.DB()
+	)
 
-	return avatars
+	db.Scopes(scopes.Paginate(page, size), scopes.OrderByIdDesc()).Where("`user_id` = ? AND `fileable_type` = ? AND `fileable_id` IS NULL", user.ID, TypeAvatar).Find(&avatars)
+	db.Model(&File{}).Where("`user_id` = ? AND `fileable_type` = ? AND `fileable_id` IS NULL", user.ID, TypeAvatar).Count(&total)
+
+	return avatars, total
+}
+
+func (user *User) HistoryBackgrounds() []*File {
+	var backgrounds = make([]*File, 0)
+	utils.DB().Where("`user_id` = ? AND `fileable_type` = ? AND `fileable_id` IS NULL", user.ID, TypeBackgroundImage).Find(&backgrounds)
+
+	return backgrounds
+}
+
+func (user *User) HistoryBackgroundsWithPaginate(page *int, size *int) ([]*File, int64) {
+	var (
+		total       int64
+		backgrounds = make([]*File, 0)
+		db          = utils.DB()
+	)
+
+	db.Model(&File{}).Where("`user_id` = ? AND `fileable_type` = ? AND `fileable_id` IS NULL", user.ID, TypeBackgroundImage).Count(&total)
+	db.Scopes(scopes.Paginate(page, size), scopes.OrderByIdDesc()).Where("`user_id` = ? AND `fileable_type` = ? AND `fileable_id` IS NULL", user.ID, TypeBackgroundImage).Find(&backgrounds)
+
+	return backgrounds, total
 }

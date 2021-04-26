@@ -41,11 +41,11 @@ type File struct {
 	// 上传用户
 	UserID int `json:"user_id" gorm:"not null;"`
 
-	FileableID   int
-	FileableType string `gorm:"not null;"`
+	FileableID   int    `json:"-" gorm:"default:null;index:fileable_index;"`
+	FileableType string `json:"-" gorm:"not null;index:fileable_index;"`
 
 	// oss 返回的 obj 的整个 json
-	Info string `json:"result" gorm:"type:text;"`
+	Info string `json:"-" gorm:"type:text;"`
 
 	CreatedAt time.Time      `json:"created_at"`
 	UpdatedAt time.Time      `json:"updated_at"`

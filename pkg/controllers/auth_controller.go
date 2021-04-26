@@ -103,6 +103,32 @@ func (au *AuthController) UpdateInfo(ctx *gin.Context) {
 	})
 }
 
+func (au *AuthController) GetHistoryAvatars(ctx *gin.Context) {
+	var paginate Pagination
+	user := auth.User(ctx)
+	if err := ctx.ShouldBind(&paginate); err != nil {
+		response.Error(ctx, 422, "")
+		return
+	}
+
+	res, total := user.HistoryAvatarsWithPaginate(&paginate.Page, &paginate.PageSize)
+
+	response.Pagination(ctx, http.StatusOK, res, paginate.Page, paginate.PageSize, total)
+}
+
+func (au *AuthController) GetHistoryBackgroundImages(ctx *gin.Context) {
+	var paginate Pagination
+	user := auth.User(ctx)
+	if err := ctx.ShouldBind(&paginate); err != nil {
+		response.Error(ctx, 422, "")
+		return
+	}
+
+	res, total := user.HistoryAvatarsWithPaginate(&paginate.Page, &paginate.PageSize)
+
+	response.Pagination(ctx, http.StatusOK, res, paginate.Page, paginate.PageSize, total)
+}
+
 func (au *AuthController) AuthMiddleware() (*jwt.GinJWTMiddleware, error) {
 	return jwt.New(&jwt.GinJWTMiddleware{
 		Key:        []byte(utils.Config().AppSecret),
