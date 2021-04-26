@@ -124,7 +124,7 @@ func (au *AuthController) GetHistoryBackgroundImages(ctx *gin.Context) {
 		return
 	}
 
-	res, total := user.HistoryAvatarsWithPaginate(&paginate.Page, &paginate.PageSize)
+	res, total := user.HistoryBackgroundsWithPaginate(&paginate.Page, &paginate.PageSize)
 
 	response.Pagination(ctx, http.StatusOK, res, paginate.Page, paginate.PageSize, total)
 }
