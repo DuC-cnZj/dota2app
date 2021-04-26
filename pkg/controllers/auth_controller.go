@@ -105,7 +105,7 @@ func (au *AuthController) UpdateInfo(ctx *gin.Context) {
 
 func (au *AuthController) GetHistoryAvatars(ctx *gin.Context) {
 	var paginate Pagination
-	user := auth.User(ctx)
+	user := &models.User{ID: auth.ID(ctx)}
 	if err := ctx.ShouldBind(&paginate); err != nil {
 		response.Error(ctx, 422, "")
 		return
@@ -118,7 +118,7 @@ func (au *AuthController) GetHistoryAvatars(ctx *gin.Context) {
 
 func (au *AuthController) GetHistoryBackgroundImages(ctx *gin.Context) {
 	var paginate Pagination
-	user := auth.User(ctx)
+	user := &models.User{ID: auth.ID(ctx)}
 	if err := ctx.ShouldBind(&paginate); err != nil {
 		response.Error(ctx, 422, "")
 		return

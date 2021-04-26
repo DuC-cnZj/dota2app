@@ -41,10 +41,14 @@ func Init(e *gin.Engine) {
 	auth := api.Group("/", authMiddleware.MiddlewareFunc())
 	{
 		auth.POST("/userinfo", authC.Info)
+		// 更新用户信息
 		auth.POST("/update_userinfo", authC.UpdateInfo)
+		// 用户上传文件
 		auth.POST("/upload", up.Upload)
 
+		// 获取用户的历史头像，不包括当前
 		auth.GET("/history_avatars", authC.GetHistoryAvatars)
+		// 获取用户的历史背景，不包括当前
 		auth.GET("/history_background_images", authC.GetHistoryBackgroundImages)
 	}
 }
