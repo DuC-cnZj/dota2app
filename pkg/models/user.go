@@ -17,6 +17,7 @@ type User struct {
 	Email    string `json:"email" gorm:"type:varchar(80);uniqueIndex:uniq_email;not null;"`
 	Password string `json:"-" gorm:"type:varchar(255);not null;default:'';"`
 	Mobile   string `json:"mobile" gorm:"type:varchar(40);"`
+	Note     string `json:"note" gorm:"VARCHAR(255);"`
 	Intro    string `json:"intro" gorm:"type:text;"`
 
 	CreatedAt time.Time      `json:"created_at"`

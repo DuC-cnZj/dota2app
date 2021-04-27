@@ -33,6 +33,7 @@ type UserInfo struct {
 	Name              string `json:"name"`
 	Avatar            string `json:"avatar"`
 	AvatarId          int    `json:"avatar_id"`
+	Note              string `json:"note"`
 	Intro             string `json:"intro"`
 	BackgroundImage   string `json:"background_image"`
 	BackgroundImageId int    `json:"background_image_id"`
@@ -47,6 +48,7 @@ func (au *AuthController) Info(ctx *gin.Context) {
 		Name:              user.Name,
 		Avatar:            user.Avatar.GetFullPath(),
 		AvatarId:          user.Avatar.ID,
+		Note:              user.Note,
 		Intro:             user.Intro,
 		BackgroundImage:   user.BackgroundImage.GetFullPath(),
 		BackgroundImageId: user.BackgroundImage.ID,
@@ -55,6 +57,7 @@ func (au *AuthController) Info(ctx *gin.Context) {
 
 type UpdateInput struct {
 	Name              string `json:"name" binding:"required"`
+	Note              string `json:"note"`
 	Intro             string `json:"intro"`
 	AvatarID          int    `json:"avatar_id" binding:"required"`
 	BackgroundImageID int    `json:"background_image_id"`
@@ -73,6 +76,7 @@ func (au *AuthController) UpdateInfo(ctx *gin.Context) {
 
 	if err := utils.DB().Model(user).Updates(map[string]interface{}{
 		"name":  input.Name,
+		"note":  input.Note,
 		"intro": input.Intro,
 	}).Error; err != nil {
 		response.Error(ctx, http.StatusInternalServerError, err)
@@ -97,6 +101,7 @@ func (au *AuthController) UpdateInfo(ctx *gin.Context) {
 		Name:              user.Name,
 		Avatar:            user.Avatar.GetFullPath(),
 		AvatarId:          user.Avatar.ID,
+		Note:              user.Note,
 		Intro:             user.Intro,
 		BackgroundImage:   user.BackgroundImage.GetFullPath(),
 		BackgroundImageId: user.BackgroundImage.ID,
