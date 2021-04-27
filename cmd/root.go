@@ -15,9 +15,13 @@ var rootCmd = &cobra.Command{
 	Short: "dota2 app.",
 }
 
-func Execute() {
+var configYaml []byte
+
+func Execute(cy []byte) {
+	configYaml = cy
 	rootCmd.AddCommand(serveCmd)
 	rootCmd.AddCommand(testCmd)
+	rootCmd.AddCommand(initConfigCmd)
 
 	if err := rootCmd.Execute(); err != nil {
 		os.Exit(1)

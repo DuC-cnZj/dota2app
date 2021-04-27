@@ -1,7 +1,13 @@
 package main
 
-import "github.com/DuC-cnZj/dota2app/cmd"
+import (
+	_ "embed"
+	"github.com/DuC-cnZj/dota2app/cmd"
+)
+
+//go:embed config_example.yaml
+var configYaml []byte
 
 func main() {
-	cmd.Execute()
+	cmd.Execute(configYaml)
 }
