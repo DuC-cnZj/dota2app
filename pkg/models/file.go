@@ -15,6 +15,7 @@ import (
 const (
 	TypeAvatar          contracts.UploadType = "avatar"
 	TypeBackgroundImage contracts.UploadType = "background_image"
+	TypeIntro           contracts.UploadType = "intro_file"
 )
 
 const (

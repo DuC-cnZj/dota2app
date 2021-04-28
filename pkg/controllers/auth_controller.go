@@ -95,6 +95,16 @@ func (au *AuthController) UpdateInfo(ctx *gin.Context) {
 		utils.DB().Model(user).Association("Avatar").Append(&avatar)
 	}
 
+	allPaths := utils.ParseFiles(input.Intro).GetAllPath()
+	var files []models.File
+	if len(allPaths) > 0 {
+		utils.DB().Where("`path` in ?", allPaths).Find(&files)
+		if len(files) > 0 {
+			utils.DB().Model(user).Association("IntroFiles").Clear()
+			utils.DB().Model(user).Association("IntroFiles").Append(&files)
+		}
+	}
+
 	response.Success(ctx, http.StatusOK, &UserInfo{
 		Id:                user.ID,
 		Email:             user.Email,

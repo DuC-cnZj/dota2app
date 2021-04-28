@@ -24,6 +24,8 @@ var initConfigCmd = &cobra.Command{
 			}
 			defer f.Close()
 			f.Write(configYaml)
+
+			log.Printf("文件 %s 创建成功", configPath)
 		}
 	},
 }
@@ -38,18 +40,4 @@ func Exists(path string) bool {
 		return false
 	}
 	return true
-}
-
-// 判断所给路径是否为文件夹
-func IsDir(path string) bool {
-	s, err := os.Stat(path)
-	if err != nil {
-		return false
-	}
-	return s.IsDir()
-}
-
-// 判断所给路径是否为文件
-func IsFile(path string) bool {
-	return !IsDir(path)
 }
