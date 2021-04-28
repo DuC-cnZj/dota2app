@@ -24,9 +24,9 @@ type User struct {
 	UpdatedAt time.Time      `json:"updated_at"`
 	DeletedAt gorm.DeletedAt `json:"deleted_at"`
 
-	Avatar          File `gorm:"polymorphic:Fileable;polymorphicValue:avatar;"`
-	BackgroundImage File `gorm:"polymorphic:Fileable;polymorphicValue:background_image;"`
-	IntroFiles []File `gorm:"polymorphic:Fileable;polymorphicValue:intro_file;"`
+	Avatar          File   `gorm:"polymorphic:Fileable;polymorphicValue:avatar;"`
+	BackgroundImage File   `gorm:"polymorphic:Fileable;polymorphicValue:background_image;"`
+	IntroFiles      []File `gorm:"polymorphic:Fileable;polymorphicValue:intro_file;"`
 }
 
 func (user *User) HistoryAvatars() []*File {

@@ -39,7 +39,7 @@ func (d *Dispatcher) HasListeners(event contracts.Event) bool {
 	return false
 }
 
-func (d *Dispatcher) Dispatch(event contracts.Event, payload contracts.Payload) error {
+func (d *Dispatcher) Dispatch(event contracts.Event, payload interface{}) error {
 	d.RLock()
 	defer d.RUnlock()
 	if listeners, ok := d.listeners[event]; ok {

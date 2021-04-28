@@ -2,6 +2,7 @@ package main
 
 import (
 	_ "embed"
+
 	"github.com/DuC-cnZj/dota2app/cmd"
 )
 

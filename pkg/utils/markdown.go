@@ -14,14 +14,14 @@ const (
 
 type File struct {
 	FullText string
-	Name string
-	Path string
-	Type MDFileType
+	Name     string
+	Path     string
+	Type     MDFileType
 }
 
 type FileList []File
 
-func (fl FileList) GetAllPath() []string  {
+func (fl FileList) GetAllPath() []string {
 	var allPaths = make([]string, 0, len(fl))
 	for _, file := range fl {
 		allPaths = append(allPaths, file.Path)

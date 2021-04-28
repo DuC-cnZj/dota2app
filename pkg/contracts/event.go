@@ -1,16 +1,6 @@
 package contracts
 
-type Payload map[string]interface{}
-
-func (p Payload) Get(key string) interface{} {
-	if data, ok := p[key]; !ok {
-		return nil
-	} else {
-		return data
-	}
-}
-
-type Listener func(Payload, Event) error
+type Listener func(interface{}, Event) error
 
 type Event string
 
@@ -30,7 +20,7 @@ type DispatcherInterface interface {
 	HasListeners(Event) bool
 
 	// Dispatch Fire an event and call the listeners.
-	Dispatch(Event, Payload) error
+	Dispatch(Event, interface{}) error
 
 	// Forget Remove a set of listeners from the dispatcher.
 	Forget(Event)
